@@ -56,7 +56,7 @@ require("lazy").setup({
 require("mason").setup()
 require("mason-lspconfig").setup()
 require("mason-tool-installer").setup({
-  ensure_installed = {"lua_ls", "ts_ls"}
+  ensure_installed = {"lua-language-server", "typescript-language-server", "pyright", "bash-language-server", "shellcheck"}
 })
 
 require("fzf-lua").setup({})
