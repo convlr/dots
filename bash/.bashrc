@@ -6,10 +6,9 @@ function git_branch() {
     fi
 }
 
-export PS1="\[\e[0;34m\]\w\[\e[0m\] \$ "
+export PS1="\[\e[0;34m\]\w\[\e[0m\] "
 
 alias projects='cd ~/dev/projects/'
-alias school='cd ~/dev/CIS-115/'
 alias vimrc='vim ~/.config/nvim/init.lua'
 alias bashrc='vim ~/.bashrc'
 alias kararc='vim ~/.config/karabiner/karabiner.json'
