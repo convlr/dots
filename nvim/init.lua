@@ -1,6 +1,5 @@
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.cursorline = true 
 vim.opt.wrap = false
 vim.opt.scrolloff = 10
 vim.opt.sidescrolloff = 8
@@ -15,12 +14,6 @@ vim.opt.signcolumn = "yes"
 vim.opt.showmatch = true
 vim.opt.swapfile = false
 vim.opt.clipboard:append("unnamedplus")
-
-vim.opt.guicursor = {
-  'n-v-c:block-Cursor/lCursor-blinkwait1000-blinkon100-blinkoff100',
-  'i-ci:ver25-Cursor/lCursor-blinkwait1000-blinkon100-blinkoff100',
-  'r:hor50-Cursor/lCursor-blinkwait100-blinkon100-blinkoff100'
-}
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -40,26 +33,45 @@ require("lazy").setup({
   { "mason-org/mason-lspconfig.nvim" },
   { "WhoIsSethDaniel/mason-tool-installer.nvim" },
   {
-    "rose-pine/neovim",
-    name = "rose-pine",
-    lazy = false,
-    priority = 1000,
-    config = function()
-      require("rose-pine").setup({
-        styles = { italic = false, transparency = true }
-      })
-      vim.cmd.colorscheme("rose-pine")
-    end
+    'chomosuke/typst-preview.nvim',
+    lazy = false, -- or ft = 'typst'
+    version = '1.*',
+    opts = {}, -- lazy.nvim will implicitly calls `setup {}`
+  },
+  {
+  "vague-theme/vague.nvim",
+  lazy = false, -- make sure we load this during startup if it is your main colorscheme
+  priority = 1000, -- make sure to load this before all the other plugins
+  config = function()
+    -- NOTE: you do not need to call setup if you don't want to.
+    require("vague").setup({
+      -- optional configuration here
+    })
+    vim.cmd("colorscheme vague")
+  end
   }
 })
 
 require("mason").setup()
 require("mason-lspconfig").setup()
 require("mason-tool-installer").setup({
-  ensure_installed = {"lua-language-server", "typescript-language-server", "pyright", "bash-language-server", "shellcheck"}
+  ensure_installed = {"lua-language-server", "typescript-language-server",
+  "pyright", "bash-language-server", "shellcheck", "html-lsp", "css-lsp",
+  "vtsls"}
 })
 
 require("fzf-lua").setup({})
+
+-- highlight yank function
+vim.api.nvim_create_autocmd("TextYankPost", {
+  desc = "Highlight text after yank",
+  group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
+  callback = function()
+    vim.hl.on_yank()
+  end,
+})
+
+vim.keymap.set("n", "<leader>e", "<Cmd>:lua vim.diagnostic.open_float()<CR>", { desc = "Open error message" })
 
 vim.keymap.set("n", "<leader>ff", function() require("fzf-lua").files() end, { desc = "Find files" })
 vim.keymap.set("n", "<leader>fg", function() require("fzf-lua").live_grep() end, { desc = "Live grep" })
